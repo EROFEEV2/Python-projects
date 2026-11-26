@@ -1,0 +1,35 @@
+#подключение библиотек
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel, QVBoxLayout
+from random import randint
+
+def show_winner():
+    number = randint(1, 100)
+    question.setText(str(number))
+    winner.setText('Победитель')
+
+#создание элементов интерфейса
+app = QApplication([])
+main_win = QWidget()
+
+#привязка элементов к вертикальной линии
+main_win.setWindowTitle('Определитель победителя')
+main_win.resize(700, 200)
+main_win.move(0, 0)
+winner = QLabel('Нажми, чтобы узнать победителя')
+question = QLabel('?')
+button = QPushButton('Сгенерировать')
+
+vline = QVBoxLayout()
+vline.addWidget(winner, alignment=Qt.AlignCenter)
+vline.addWidget(question, alignment=Qt.AlignCenter)
+vline.addWidget(button, alignment=Qt.AlignCenter)
+
+main_win.setLayout(vline)
+
+#обработка событий
+button.clicked.connect(show_winner)
+
+#запуск приложения
+main_win.show()
+app.exec_()
