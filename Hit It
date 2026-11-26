@@ -1,0 +1,58 @@
+from turtle import *
+
+
+class Sprite(Turtle):
+    def __init__(self, x, y, step=10, t_shape='triangle', t_color='yellow'):
+        super().__init__()
+        self.penup()
+        self.step = step
+        self.shape(t_shape)
+        self.color(t_color)
+        self.speed(0)
+        self.goto(x, y)
+        
+    def moveup(self):
+        self.setheading(90)
+        self.goto(self.xcor(), self.ycor() + self.step)
+
+    def movedown(self):
+        self.setheading(270)
+        self.goto(self.xcor(), self.ycor() - self.step)
+        
+    def moveright(self):
+        self.setheading(0)
+        self.goto(self.xcor() + self.step, self.ycor())
+    
+    def moveleft(self):
+        self.setheading(180)
+        self.goto(self.xcor() - self.step, self.ycor())
+    
+    def is_collide(self, sprite):
+        if self.distance(sprite.xcor(), sprite.ycor()) < 30:
+            return True
+        return False
+
+player = Sprite(0, -100, 10, 'turtle', 'orange')
+obstacle1 = Sprite(-200, -45, 10, 'square', 'red')
+obstacle2= Sprite(200, 20, 10, 'square', 'red')
+target = Sprite(0, 200, 10, 'triangle', 'green')
+
+screen = player.getscreen()
+screen.listen()
+
+screen.onkey(player.moveup, 'w')
+screen.onkey(player.moveleft, 'a')
+screen.onkey(player.movedown, 's')
+screen.onkey(player.moveright, 'd')
+
+total_score = 0
+
+while total_score < 3:
+    if player.is_collide(target):
+        player.goto(0, -100) 
+        total_score += 1
+    if player.is_collide(obstacle1) or player.is_collide(obstacle2):
+        target.hideturtle()
+obstacle1.hideturtle()
+obstacle2.hideturtle()
+
