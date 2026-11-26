@@ -1,0 +1,125 @@
+import pygame as pg
+from random import *
+from time import * 
+
+# TODO: реализовать стиль карточки на экране(запусти чтобы проверить)
+pg.init()
+
+SKY_BLUE = (135, 206, 235)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+YELLOW = (255, 255, 0)
+BLUE = (0, 0, 255)
+GREEN = (0, 255, 0)
+RED = (255, 0, 0)
+
+WINDOW_SIZE = (500, 500)
+
+mw = pg.display.set_mode(WINDOW_SIZE)
+mw.fill(SKY_BLUE)
+clock = pg.time.Clock()
+
+class Area():
+    def __init__(self, x, y, width=10, height=10, color=None):
+        self.rect = rect = pg.Rect(x, y, width, height) 
+        self.fill_color = color 
+
+    def set_color(self, new_color):
+        self.fill_color = new_color
+    
+    def fill(self):
+        pg.draw.rect(mw, self.fill_color, self.rect)
+        
+    def outline(self, frame_color, thickness):
+        pg.draw.rect(mw, frame_color, self.rect, thickness)
+    
+    def collidepoint(self, x, y):
+        return self.rect.collidepoint(x,y)
+
+
+class Label(Area):
+    def set_text(self, text, fsize=15, fcolor=BLACK):
+        self.image = pg.font.SysFont("Verdana", fsize).render(text, True, fcolor)  
+        
+    def draw(self, shift_x=0, shift_y=0):
+        self.fill()
+        mw.blit(self.image, (self.rect.x + shift_x, self.rect.y + shift_y) )
+
+x = 10
+card_list = []
+
+for i in range(4):
+    card = Label(x, 200, 90, 165, YELLOW)
+    card.outline(BLUE, 12)
+    card.set_text('CLICK', 40, BLACK)
+    card_list.append(card)
+    x += 125
+
+text_timer = Label(20, 20, 140, 40, SKY_BLUE)
+text_timer.set_text("Время:", 60, BLUE)
+text_timer.draw()
+
+text_score = Label(365, 20, 110, 40, SKY_BLUE)
+text_score.set_text("Счёт:", 60, BLUE)
+text_score.draw()
+
+timer = Label(70, 75, 140, 40, SKY_BLUE)
+timer.set_text("0", 60, BLUE)
+timer.draw()
+
+score = Label(415, 75, 110, 40, SKY_BLUE)
+score.set_text("0", 60, BLUE)
+score.draw()
+
+total_card = len(card_list)
+wait = 0
+start_time = time()
+cur_time = start_time
+points = 0
+while True:
+    new_time = time()
+    if new_time - cur_time >= 1:
+        cur_time = new_time
+        timer.set_text(str(int(new_time - start_time)), 60, BLUE)
+        timer.draw()
+
+    if wait == 0:
+        rand_card = randint(1, total_card)  
+        for index in range(total_card):
+            card_list[index].set_color(YELLOW)
+            if rand_card == index + 1:  
+                card_list[index].draw(6, 55)
+            else:
+                card_list[index].fill()
+        wait = 20
+    else:
+        wait -= 1
+    
+    for event in pg.event.get():
+        if event.type == pg.MOUSEBUTTONDOWN:
+            x, y = event.pos
+            for index in range(total_card):
+                if card_list[index].collidepoint(x, y):
+                    if index + 1 == rand_card:
+                        card_list[index].set_color(GREEN)
+                        points += 1
+                    else:
+                        card_list[index].set_color(RED)
+                        points -= 1
+                    score.set_text(str(points), 60, BLUE)
+                    score.draw()
+                card_list[index].fill()
+                    
+
+
+    pg.display.update()
+    clock.tick(40)
+
+
+                    
+                    
+
+
+
+
+
