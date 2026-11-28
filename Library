@@ -1,0 +1,80 @@
+books = []
+
+while True:
+
+    print('1 - Добавить книгу')
+    print('2 - Найти книгу по автору')
+    print('3 - Найти книгу по названию')
+    print('4 - Показать все книги')
+    print('s - Выход')
+
+    choice = input('Выберите пункт: ').strip().lower()
+
+    if choice == '1':
+        title = input('Введите название: ').strip()
+        author = input('Введите автора: ').strip()
+
+        if not title or not author:
+            print('Ошибка: название и автор не могут быть пустыми!')
+            continue
+
+        book = {
+            'title': title,
+            'author': author
+        }
+
+        books.append(book)
+        print('✓ Книга добавлена!')
+
+    elif choice == '2':
+        author_name = input('Введите имя автора: ').strip()
+
+        if not author_name:
+            print('Ошибка: запрос не может быть пустым!')
+            continue
+
+        found = False
+
+        for book in books:
+            if author_name.lower() in book['author'].lower():
+                print(f"Название: {book['title']}")
+                print(f"Автор: {book['author']}")
+                print()
+                found = True
+
+        if not found:
+            print('не нашёл')
+
+    elif choice == '3':
+        title_name = input('Введите название: ').strip()
+
+        if not title_name:
+            print('Ошибка: запрос не может быть пустым!')
+            continue
+
+        found = False
+
+        for book in books:
+            if title_name.lower() in book['title'].lower():
+                print(f"Название: {book['title']}")
+                print(f"Автор: {book['author']}")
+                print()
+                found = True
+
+        if not found:
+            print('не нашёл')
+
+    elif choice == '4':
+        if not books:
+            print('книг нет')
+        else:
+            for book in books:
+                print(f"Название: {book['title']}")
+                print(f"Автор: {book['author']}")
+                print()
+
+    elif choice == 's':
+        break
+
+    else:
+        print('Ошибка: выберите пункт из меню.')
